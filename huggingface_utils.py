@@ -22,7 +22,7 @@ def get_readme_text(href):
 
     response = requests.get(readme_url)
     if response.status_code == 200:
-        return response.text[:4000]
+        return response.text[:2000]
 
     response = requests.get(tree_main_url)
     if response.status_code == 200:
@@ -39,7 +39,7 @@ def get_readme_text(href):
 
         extracted_text = ' '.join(text_segments).strip()
         if extracted_text:
-            return extracted_text[:4000]
+            return extracted_text[:2000]
         else:
             return ''
     return ''
