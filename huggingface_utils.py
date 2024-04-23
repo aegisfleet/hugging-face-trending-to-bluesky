@@ -1,19 +1,26 @@
 import requests
 from bs4 import BeautifulSoup, Comment
 
+import artifact_utils
+
 def get_trending_hf_models(url="https://huggingface.co/models", count=5):
+    previous_models = artifact_utils.load_previous_results()
     response = requests.get(url)
     soup = BeautifulSoup(response.text, "html.parser")
-    model_elements = soup.find_all("article", class_="overview-card-wrapper group/repo")[:count]
+    model_elements = soup.find_all("article", class_="overview-card-wrapper group/repo")
 
     models = []
-    for model_element in model_elements:
+    for model_element in model_elements[:10]:
+        if len(models) >= count:
+            break
         a_tag = model_element.find("a")
         href = a_tag["href"]
-        title = a_tag.find("h4").text.strip()
         full_url = f"https://huggingface.co{href}"
-        models.append((full_url, href, title))
+        if full_url not in previous_models:
+            title = a_tag.find("h4").text.strip()
+            models.append((full_url, href, title))
 
+    artifact_utils.save_results(models)
     return models
 
 def get_readme_text(href):
