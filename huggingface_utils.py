@@ -1,3 +1,4 @@
+import re
 import requests
 from bs4 import BeautifulSoup, Comment
 
@@ -17,19 +18,25 @@ def get_trending_hf_models(url="https://huggingface.co/models", count=5):
         href = a_tag["href"]
         full_url = f"https://huggingface.co{href}"
         if full_url not in previous_models:
-            title = a_tag.find("h4").text.strip()
-            models.append((full_url, href, title))
+            name = href[1:]
+            models.append((full_url, name))
 
     artifact_utils.save_results(models)
     return models
 
-def get_readme_text(href):
-    readme_url = f"https://huggingface.co{href}/raw/main/README.md"
-    tree_main_url = f"https://huggingface.co{href}"
+def remove_html_tags_and_lists(text):
+    clean_text = re.sub('<.*?>', '', text)
+    clean_text = re.sub('^[ \t]*[-*+][ \t].*$', '', clean_text, flags=re.MULTILINE)
+    clean_text = re.sub('\n\s*\n', '\n', clean_text)
+    return clean_text
+
+def get_readme_text(repo_name):
+    readme_url = f"https://huggingface.co/{repo_name}/raw/main/README.md"
+    tree_main_url = f"https://huggingface.co/{repo_name}"
 
     response = requests.get(readme_url)
     if response.status_code == 200:
-        return response.text[:2000]
+        return remove_html_tags_and_lists(response.text)[:2000]
 
     response = requests.get(tree_main_url)
     if response.status_code == 200:
@@ -46,7 +53,7 @@ def get_readme_text(href):
 
         extracted_text = ' '.join(text_segments).strip()
         if extracted_text:
-            return extracted_text[:2000]
+            return remove_html_tags_and_lists(extracted_text)[:2000]
         else:
             return ''
     return ''
