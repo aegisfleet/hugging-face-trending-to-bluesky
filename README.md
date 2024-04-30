@@ -3,6 +3,10 @@
 Hugging Face Trending to Blueskyは、Hugging Faceの人気リポジトリの内容を要約し、Blueskyに投稿するPython製のアプリケーションです。  
 このアプリケーションは、AIと機械学習の技術トレンドに迅速に反応し、Blueskyのフォロワーに価値ある情報を提供することを目的としています。
 
+## 関連記事
+
+- [Webスクレイピング×生成AI×SNSで新しい価値が生まれる？すべて無料でBOTを作った話](https://note.com/aegisfleet/n/nc8362f717cd9)
+
 ## 機能
 
 - Hugging Faceのトレンドリポジトリを自動検出
