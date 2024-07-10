@@ -1,6 +1,6 @@
 import re
 import requests
-from bs4 import BeautifulSoup, Comment
+from bs4 import BeautifulSoup, Comment, Tag, NavigableString
 
 import artifact_utils
 
@@ -15,11 +15,13 @@ def get_trending_hf_models(url="https://huggingface.co/models", count=5):
         if len(models) >= count:
             break
         a_tag = model_element.find("a")
-        href = a_tag["href"]
-        full_url = f"https://huggingface.co{href}"
-        if full_url not in previous_models:
-            name = href[1:]
-            models.append((full_url, name))
+        if a_tag and isinstance(a_tag, Tag):
+            href = a_tag.get("href")
+            if href:
+                full_url = f"https://huggingface.co{href}"
+                if full_url not in previous_models:
+                    name = href[1:]
+                    models.append((full_url, name))
 
     artifact_utils.save_results(models)
     return models
@@ -47,7 +49,7 @@ def get_readme_text(repo_name):
             if 'HTML_TAG_START' in comment:
                 sibling = comment.next_element
                 while sibling and not (isinstance(sibling, Comment) and 'HTML_TAG_END' in sibling):
-                    if sibling.name is None:
+                    if isinstance(sibling, NavigableString):
                         text_segments.append(sibling.strip())
                     sibling = sibling.next_element
 
