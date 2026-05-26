@@ -18,7 +18,7 @@ Hugging Face Trending to Blueskyは、Hugging Faceの人気リポジトリの内
 ```bash
 git clone https://github.com/yourusername/hugging-face-trending-to-bluesky.git
 cd hugging-face-trending-to-bluesky
-pip install -r requirements.txt
+uv sync
 ```
 
 ## 使用方法
@@ -26,7 +26,7 @@ pip install -r requirements.txt
 アプリケーションを実行するには、以下のコマンドを使用します。
 
 ```text
-python main.py <BlueSkyのユーザーハンドル> <BlueSkyのパスワード> <GeminiのAPIキー>
+uv run python main.py <BlueSkyのユーザーハンドル> <BlueSkyのパスワード> <GeminiのAPIキー>
 ```
 
 プログラムは、Hugging Faceから人気のあるリポジトリを検出し、その内容を要約してBlueskyに投稿します。  
