@@ -30,4 +30,3 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: uv run python test_gemini_api.py "${{ secrets.GEMINI_API_KEY }}"
-
